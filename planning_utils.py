@@ -81,7 +81,6 @@ def valid_actions(grid, current_node):
 
     # check if the node is off the grid or
     # it's an obstacle
-
     if x - 1 < 0 or grid[x-1, y] == 1:
         valid_actions.remove(Action.NORTH)
     if x - 1 < 0 or y - 1 < 0 or grid[x-1, y-1] == 1:
@@ -154,10 +153,9 @@ def a_star(grid, h, start, goal):
         print('**********************') 
     return path[::-1], path_cost
 
+
 def heuristic(position, goal_position):
     return euclidean(position, goal_position)
-    # return np.linalg.norm(np.array(position) - np.array(goal_position))
 
 def euclidean(p1, p2):
     return np.sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2)
-
