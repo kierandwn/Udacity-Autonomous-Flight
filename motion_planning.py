@@ -31,6 +31,8 @@ class MotionPlanning(Drone):
 
     WP_ACCEPTANCE_BAND = 2.0
 
+    GOAL_LATLON = [-122.399247, 37.793807, TARGET_ALTITUDE]
+
     def __init__(self, connection):
         super().__init__(connection)
 
@@ -134,7 +136,6 @@ class MotionPlanning(Drone):
             m.group('lat'),
             m.group('lon')
         ]
-        # alt0 = self.global_position[2]
         self.set_home_position(lon0, lat0, 0)
 
         # Convert current posiiton to local frame
@@ -154,23 +155,12 @@ class MotionPlanning(Drone):
         grid_start = local_to_grid(local_position, north_offset, east_offset)
         
         # Set goal as some arbitrary position on the grid
-        global_goal = [-122.396629, 37.794608, self.TARGET_ALTITUDE]
-        local_goal = global_to_local(global_goal, self.global_home)
-
-        # dist = 80
+        local_goal = global_to_local(self.GOAL_LATLON, self.global_home)
         grid_goal = local_to_grid(local_goal, north_offset, east_offset)
-        # grid_goal = (grid_start[0]+dist, grid_start[1]+dist)
-        # grid_goal = (-north_offset+10, -east_offset+10)
 
         # Run A* to find a path from start to goal
-        # TODO: add diagonal motions with a cost of sqrt(2) to your A* implementation
-        # or move to a different search space such as a graph (not done here)
         print('Local Start and Goal: ', grid_start, grid_goal)
         path, _ = a_star(grid, heuristic, grid_start, grid_goal)
-
-        
-        # TODO: prune path to minimize number of waypoints
-        # TODO (if you're feeling ambitious): Try a different approach altogether!
         pruned_path = prune(path)
 
         # Convert path to waypoints
@@ -179,8 +169,6 @@ class MotionPlanning(Drone):
        
         # Set self.waypoints
         self.waypoints = waypoints
-        
-        # TODO: send waypoints to sim (this is just for visualization of waypoints)
         self.send_waypoints()
 
     def start(self):

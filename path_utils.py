@@ -8,7 +8,6 @@ def collinearity_check(p1, p2, p3, epsilon=1e-6):
     det = np.linalg.det(m)
     return abs(det) < epsilon
 
-# We're using collinearity here, but you could use Bresenham as well!
 def prune(path):
     pruned_path = [p for p in path]
     
